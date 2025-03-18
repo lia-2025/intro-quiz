@@ -277,6 +277,7 @@
         let isAudioPlayed = false;
 
         function loadQuestion() {
+            isAudioPlayed = false;
             const quiz = shuffledQuizData[currentQuestion];
             audioElement.src = quiz.audio;
             document.getElementById("result").textContent = ""; // 結果をリセット
