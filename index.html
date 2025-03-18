@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブルアカイントロクイズ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #quiz-container {
+            margin-top: 20px;
+        }
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        .options-container img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        #result {
+            font-size: 20px;
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+
+    <div id="quiz-container">
+        <h1>ブルアカイントロクイズ</h1>
+        <button id="play-audio">このBGMが流れていたシーンは？</button>
+        <div id="options" class="options-container"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "この曲のタイトルは？",
+                audio: "q1.wav", // 問題のイントロ音声
+                correctAudio: "r1.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p1.png", correct: false },
+                    { img: "p2.png", correct: true },
+                    { img: "p3.png", correct: false },
+                    { img: "p4.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q2.wav", // 問題のイントロ音声
+                correctAudio: "r2.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p5.png", correct: false },
+                    { img: "p6.png", correct: false },
+                    { img: "p7.png", correct: false },
+                    { img: "p8.png", correct: true }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q3.wav", // 問題のイントロ音声
+                correctAudio: "r3.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p9.png", correct: true },
+                    { img: "p10.png", correct: false },
+                    { img: "p11.png", correct: false },
+                    { img: "p12.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q4.wav", // 問題のイントロ音声
+                correctAudio: "r4.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p13.png", correct: false },
+                    { img: "p14.png", correct: false },
+                    { img: "p15.png", correct: true },
+                    { img: "p16.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q5.wav", // 問題のイントロ音声
+                correctAudio: "r5.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p17.png", correct: true },
+                    { img: "p18.png", correct: false },
+                    { img: "p19.png", correct: false },
+                    { img: "p20.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q6.wav", // 問題のイントロ音声
+                correctAudio: "r6.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p21.png", correct: false },
+                    { img: "p22.png", correct: true },
+                    { img: "p23.png", correct: false },
+                    { img: "p24.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q7.wav", // 問題のイントロ音声
+                correctAudio: "r7.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p25.png", correct: false },
+                    { img: "p26.png", correct: false },
+                    { img: "p27.png", correct: true },
+                    { img: "p28.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q8.wav", // 問題のイントロ音声
+                correctAudio: "r8.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p29.png", correct: false },
+                    { img: "p30.png", correct: false },
+                    { img: "p31.png", correct: false },
+                    { img: "p32.png", correct: true }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q9.wav", // 問題のイントロ音声
+                correctAudio: "r9.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p33.png", correct: true },
+                    { img: "p34.png", correct: false },
+                    { img: "p35.png", correct: false },
+                    { img: "p36.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q10.wav", // 問題のイントロ音声
+                correctAudio: "r10.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p37.png", correct: false },
+                    { img: "p38.png", correct: true },
+                    { img: "p39.png", correct: false },
+                    { img: "p40.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q11.wav", // 問題のイントロ音声
+                correctAudio: "r11.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p41.png", correct: false },
+                    { img: "p42.png", correct: false },
+                    { img: "p43.png", correct: true },
+                    { img: "p44.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q12.wav", // 問題のイントロ音声
+                correctAudio: "r12.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p45.png", correct: false },
+                    { img: "p46.png", correct: false },
+                    { img: "p47.png", correct: false },
+                    { img: "p48.png", correct: true }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q13.wav", // 問題のイントロ音声
+                correctAudio: "r13.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p49.png", correct: true },
+                    { img: "p50.png", correct: false },
+                    { img: "p51.png", correct: false },
+                    { img: "p52.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q14.wav", // 問題のイントロ音声
+                correctAudio: "r14.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p53.png", correct: false },
+                    { img: "p54.png", correct: true },
+                    { img: "p55.png", correct: false },
+                    { img: "p56.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q15.wav", // 問題のイントロ音声
+                correctAudio: "r15.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p57.png", correct: false },
+                    { img: "p58.png", correct: false },
+                    { img: "p59.png", correct: true },
+                    { img: "p60.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q16.wav", // 問題のイントロ音声
+                correctAudio: "r16.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p61.png", correct: false },
+                    { img: "p62.png", correct: false },
+                    { img: "p63.png", correct: false },
+                    { img: "p64.png", correct: true }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q17.wav", // 問題のイントロ音声
+                correctAudio: "r17.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p65.png", correct: true },
+                    { img: "p66.png", correct: false },
+                    { img: "p67.png", correct: false },
+                    { img: "p68.png", correct: false }
+                ]
+            },
+            {
+                question: "この曲のタイトルは？",
+                audio: "q18.wav", // 問題のイントロ音声
+                correctAudio: "r18.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p69.png", correct: false },
+                    { img: "p70.png", correct: true },
+                    { img: "p71.png", correct: false },
+                    { img: "p72.png", correct: false }
+                ]
+            },
+           {
+                question: "この曲のタイトルは？",
+                audio: "q19.wav", // 問題のイントロ音声
+                correctAudio: "r19.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p73.png", correct: false },
+                    { img: "p74.png", correct: false },
+                    { img: "p75.png", correct: true },
+                    { img: "p76.png", correct: false }
+                ]
+            },
+           {
+                question: "この曲のタイトルは？",
+                audio: "q20.wav", // 問題のイントロ音声
+                correctAudio: "r20.wav", // 正解時に流れる音声
+                options: [
+                    { img: "p77.png", correct: false },
+                    { img: "p78.png", correct: false },
+                    { img: "p79.png", correct: false },
+                    { img: "p80.png", correct: true }
+                ]
+            },
+            // 他の問題を追加
+        ];
+
+        let currentQuestion = 0;
+        let shuffledQuizData = [];
+        let score = 0;
+        let audioElement = new Audio();
+        let isAudioPlayed = false;
+
+        function loadQuestion() {
+            const quiz = shuffledQuizData[currentQuestion];
+            audioElement.src = quiz.audio;
+            document.getElementById("result").textContent = ""; // 結果をリセット
+            
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+            quiz.options.forEach((option, index) => {
+                const img = document.createElement("img");
+                img.src = option.img;
+                img.className = "option-img";
+                img.dataset.correct = option.correct;
+                img.onclick = () => {
+                if (isAudioPlayed) {
+                    checkAnswer(img, option.correct, quiz.correctAudio);
+                }
+            };
+                optionsContainer.appendChild(img);
+            });
+        }
+
+        document.getElementById("play-audio").addEventListener("click", () => {
+            isAudioPlayed = true;
+            audioElement.play();
+        });
+
+        function checkAnswer(selectedImg, isCorrect, correctAudio) {
+            const options = document.querySelectorAll(".option-img");
+            let correctImg = null;
+
+            options.forEach(img => {
+                if (img.dataset.correct === "true") {
+                    img.style.border = "4px solid green";
+                    correctImg = img;
+                } else {
+                    img.style.border = "4px solid red";
+                }
+            });
+
+            const resultText = document.getElementById("result");
+            resultText.textContent = isCorrect ? "正解！" : "不正解";
+
+            if (isCorrect) {
+                score++;
+            }
+
+            // 正解音を再生し、終わるまで待つ
+            if (correctImg) {
+                const correctAudioElement = new Audio(correctAudio);
+                correctAudioElement.play();
+                correctAudioElement.onended = () => {
+                    moveToNextQuestion();
+                };
+            }
+        }
+
+        function moveToNextQuestion() {
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < shuffledQuizData.length) {
+                    loadQuestion();
+                } else {
+                    document.getElementById("quiz-container").innerHTML = `<h2>イントロクイズ終了！<br>先生のスコア：${score}/${shuffledQuizData.length}</h2><img src='end_image.png' alt='終了画面' style='margin-top: 10px; width: 300px;'><br><button id='screenshot-btn' style='margin-top: 10px; padding: 10px; font-size: 16px; cursor: pointer;'>スクリーンショットを撮る</button>`;
+                    document.getElementById("screenshot-btn").addEventListener("click", takeScreenshot);
+                }
+            }, 500); // 2秒待機して次へ進む
+        }
+
+        function takeScreenshot() {
+            html2canvas(document.getElementById("quiz-container"), { scale: 1.2, x: 500, width: document.getElementById("quiz-container").offsetWidth - 1000 }).then(canvas => {
+                const link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = "quiz_screenshot.png";
+                link.click();
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            shuffledQuizData = [...quizData].sort(() => Math.random() - 0.5).slice(0, 10);
+            loadQuestion();
+        });
+    </script>
+
+</body>
+</html>
