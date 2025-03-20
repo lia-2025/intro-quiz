@@ -339,7 +339,7 @@
                 if (currentQuestion < shuffledQuizData.length) {
                     loadQuestion();
                 } else {
-                    document.getElementById("quiz-container").innerHTML = `<h2>イントロクイズ終了！<br>先生のスコア：${score}/${shuffledQuizData.length}</h2><img src='end_image.png' alt='終了画面' style='margin-top: 10px; width: 300px;'><br><button id='screenshot-btn' style='margin-top: 10px; padding: 10px; font-size: 16px; cursor: pointer;'>スクリーンショットを撮る</button>`;
+                    document.getElementById("quiz-container").innerHTML = `<h2>ブルアカイントロクイズ終了！<br>先生のスコア：${score}/${shuffledQuizData.length}</h2><img src='end_image.png' alt='終了画面' style='margin-top: 10px; width: 300px;'><br><button id='screenshot-btn' style='margin-top: 10px; padding: 10px; font-size: 16px; cursor: pointer;'>スクリーンショットを撮る</button>`;
                     document.getElementById("screenshot-btn").addEventListener("click", takeScreenshot);
                 }
             }, 500); // 2秒待機して次へ進む
