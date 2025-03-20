@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ブルアカイントロクイズ</title>
+    <title>イントロクイズ</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,7 +37,6 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body>
-
     <div id="quiz-container">
         <h1>ブルアカイントロクイズ</h1>
         <button id="play-audio">このBGMが流れていたシーン/イベントは？</button>
@@ -267,33 +266,44 @@
                     { img: "p80.png", correct: true }
                 ]
             },
+
             // 他の問題を追加
         ];
 
         let currentQuestion = 0;
         let shuffledQuizData = [];
+        let isAudioPlayed = false;
+        let hasAnswered = false;
         let score = 0;
         let audioElement = new Audio();
-        let isAudioPlayed = false;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            shuffledQuizData = [...quizData].sort(() => Math.random() - 0.5).slice(0, 10);
+            loadQuestion();
+        });
 
         function loadQuestion() {
             isAudioPlayed = false;
+            hasAnswered = false;
             const quiz = shuffledQuizData[currentQuestion];
+            
             audioElement.src = quiz.audio;
-            document.getElementById("result").textContent = ""; // 結果をリセット
+            
+            document.getElementById("result").textContent = "";
             
             const optionsContainer = document.getElementById("options");
             optionsContainer.innerHTML = "";
+            
             quiz.options.forEach((option, index) => {
                 const img = document.createElement("img");
                 img.src = option.img;
                 img.className = "option-img";
                 img.dataset.correct = option.correct;
                 img.onclick = () => {
-                if (isAudioPlayed) {
-                    checkAnswer(img, option.correct, quiz.correctAudio);
-                }
-            };
+                    if (isAudioPlayed && !hasAnswered) {
+                        checkAnswer(img, option.correct, quiz.correctAudio);
+                    }
+                };
                 optionsContainer.appendChild(img);
             });
         }
@@ -304,9 +314,14 @@
         });
 
         function checkAnswer(selectedImg, isCorrect, correctAudio) {
+            if (hasAnswered) return;
+            hasAnswered = true;
+            
             const options = document.querySelectorAll(".option-img");
+            options.forEach(img => img.style.pointerEvents = "none");
+            
             let correctImg = null;
-
+            
             options.forEach(img => {
                 if (img.dataset.correct === "true") {
                     img.style.border = "4px solid green";
@@ -315,15 +330,14 @@
                     img.style.border = "4px solid red";
                 }
             });
-
+            
             const resultText = document.getElementById("result");
             resultText.textContent = isCorrect ? "正解！" : "不正解";
-
+            
             if (isCorrect) {
                 score++;
             }
-
-            // 正解音を再生し、終わるまで待つ
+            
             if (correctImg) {
                 const correctAudioElement = new Audio(correctAudio);
                 correctAudioElement.play();
@@ -342,23 +356,22 @@
                     document.getElementById("quiz-container").innerHTML = `<h2>ブルアカイントロクイズ終了！<br>先生のスコア：${score}/${shuffledQuizData.length}</h2><img src='end_image.png' alt='終了画面' style='margin-top: 10px; width: 300px;'><br><button id='screenshot-btn' style='margin-top: 10px; padding: 10px; font-size: 16px; cursor: pointer;'>スクリーンショットを撮る</button>`;
                     document.getElementById("screenshot-btn").addEventListener("click", takeScreenshot);
                 }
-            }, 500); // 2秒待機して次へ進む
+            }, 500);
         }
 
         function takeScreenshot() {
-            html2canvas(document.getElementById("quiz-container"), { scale: 1.2, x: 500, width: document.getElementById("quiz-container").offsetWidth - 1000 }).then(canvas => {
+            html2canvas(document.getElementById("quiz-container"), {
+                scale: window.devicePixelRatio,
+                useCORS: true,
+                scrollX: 0,
+                scrollY: 0,
+            }).then(canvas => {
                 const link = document.createElement("a");
                 link.href = canvas.toDataURL("image/png");
                 link.download = "quiz_screenshot.png";
                 link.click();
             });
         }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            shuffledQuizData = [...quizData].sort(() => Math.random() - 0.5).slice(0, 10);
-            loadQuestion();
-        });
     </script>
-
 </body>
 </html>
